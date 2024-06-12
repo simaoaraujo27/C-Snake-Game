@@ -29,10 +29,20 @@ int initialize_window(SDL_Window **window, SDL_Renderer **renderer) {
     return 1;
   }
 
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    fprintf(stderr, "SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+            Mix_GetError());
+    return 1;
+  }
+
+
   return 0;
 }
 
-void destroy_window(SDL_Window *window, SDL_Renderer *renderer) {
+void destroy_window(SDL_Window *window, SDL_Renderer *renderer,
+                    Mix_Chunk *foodSound) {
+  Mix_FreeChunk(foodSound);
+  Mix_CloseAudio();
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   TTF_Quit();

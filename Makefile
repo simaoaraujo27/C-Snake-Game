@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -I.
-LDFLAGS = -lSDL2 -lSDL2_ttf
+LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 EXEC = SnakeGame

@@ -17,21 +17,43 @@ int main() {
     return 1;
   }
 
+  Mix_Chunk *foodSound = Mix_LoadWAV("assets/audio/eating.wav");
+  if (foodSound == NULL) {
+    fprintf(stderr, "Failed to load food sound effect! SDL_mixer Error: %s\n",
+            Mix_GetError());
+    return 1;
+  }
+
+  // Carregar música de fundo
+  Mix_Music *backgroundMusic = Mix_LoadMUS("assets/audio/background.mp3");
+  if (backgroundMusic == NULL) {
+    fprintf(stderr, "Failed to load background music! SDL_mixer Error: %s\n",
+            Mix_GetError());
+    return 1;
+  }
+
   Game *game = malloc(sizeof(struct Game));
   setup(game);
 
-  while (!game->quit) {
-    processInput(game);
-    update(game);
-    printCoords(game);
-    render(renderer, game, font);
-    SDL_Delay(90);
+  // Reproduzir música de fundo em loop
+  if (Mix_PlayMusic(backgroundMusic, -1) == -1) {
+    fprintf(stderr, "SDL_mixer Error: %s\n", Mix_GetError());
   }
 
-  destroy_window(window, renderer);
+  Mix_VolumeMusic(30);
+
+  while (!game->quit) {
+    processInput(game);
+    update(game, foodSound);
+    render(renderer, game, font);
+    SDL_Delay(125);
+  }
+
+  destroy_window(window, renderer, foodSound);
   free(game->snake->head);
   free(game->snake);
   free(game->food);
+  Mix_FreeMusic(backgroundMusic);
 
   free(game);
 

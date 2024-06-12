@@ -4,6 +4,6 @@
 #include <SDL2/SDL.h>
 
 int initialize_window(SDL_Window **window, SDL_Renderer **renderer);
-void destroy_window(SDL_Window *window, SDL_Renderer *renderer);
+void destroy_window(SDL_Window *window, SDL_Renderer *renderer, Mix_Chunk *foodSound);
 
 #endif 

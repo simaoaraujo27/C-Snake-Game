@@ -37,15 +37,6 @@ void processInput(Game *game) {
   }
 }
 
-void printCoords(Game *game) {
-  SnakeSegment *head = game->snake->head;
-  while (head != NULL) {
-    printf("(%d, %d)\n", head->x, head->y);
-    head = head->next;
-  }
-  printf("--------------\n");
-}
-
 void increaseSnake(Game *game) {
   SnakeSegment *new = malloc(sizeof(struct SnakeSegment));
 
@@ -75,7 +66,7 @@ void increaseSnake(Game *game) {
   return;
 }
 
-void moveSnake(Game *game) {
+void moveSnake(Game *game, Mix_Chunk *foodSound) {
   int prev_x = game->snake->head->x;
   int prev_y = game->snake->head->y;
 
@@ -129,6 +120,8 @@ void moveSnake(Game *game) {
       game->snake->head->x == game->food->x) {
     game->score++;
     game->snake->length++;
+    Mix_PlayChannel(-1, foodSound, 0);
+    Mix_VolumeChunk(foodSound, 30);
     increaseSnake(game);
     do {
       game->food->x = rand() % GRID_WIDTH;
@@ -156,8 +149,8 @@ void updateGrid(Game *game) {
   }
 }
 
-void update(Game *game) {
-  moveSnake(game);
+void update(Game *game, Mix_Chunk *foodSound) {
+  moveSnake(game, foodSound);
   updateGrid(game);
 }
 
@@ -184,7 +177,7 @@ void renderScore(SDL_Renderer *renderer, Game *game, TTF_Font *font) {
   }
 
   SDL_Rect textRect;
-  textRect.x = 250; // Posição X na tela
+  textRect.x = 235; // Posição X na tela
   textRect.y = 650; // Posição Y na tela
   textRect.w = textSurface->w;
   textRect.h = textSurface->h;

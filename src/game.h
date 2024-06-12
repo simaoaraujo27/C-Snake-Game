@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,10 +58,10 @@ int mod(int x, int y);
 void processInput(Game *game);
 
 void increaseSnake(Game *game);
-void moveSnake(Game *game);
+void moveSnake(Game *game, Mix_Chunk *foodSound);
 void clearGrid(Game *game);
 void updateGrid(Game *game);
-void update(Game *game);
+void update(Game *game, Mix_Chunk *foodSound);
 void renderGrid(SDL_Renderer *renderer, Game *game);
 void renderScore(SDL_Renderer *renderer, Game *game, TTF_Font *font);
 void render(SDL_Renderer *renderer, Game *game, TTF_Font *font);
