@@ -39,6 +39,7 @@ To compile the game, use the following command:
 
 ```bash
 make run
+```bash
 
 ## Credits
 
