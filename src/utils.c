@@ -1,5 +1,6 @@
 #include "game.h"
 
+// Basic window structure in SDL2 
 int initialize_window(SDL_Window **window, SDL_Renderer **renderer) {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     fprintf(stderr, "Error initializing SDL: %s\n", SDL_GetError());
@@ -39,6 +40,7 @@ int initialize_window(SDL_Window **window, SDL_Renderer **renderer) {
   return 0;
 }
 
+// Clears everything
 void destroy_window(SDL_Window *window, SDL_Renderer *renderer,
                     Mix_Chunk *foodSound) {
   Mix_FreeChunk(foodSound);

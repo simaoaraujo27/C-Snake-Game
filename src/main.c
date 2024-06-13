@@ -24,7 +24,7 @@ int main() {
     return 1;
   }
 
-  // Carregar música de fundo
+  // Load background music
   Mix_Music *backgroundMusic = Mix_LoadMUS("assets/audio/background.mp3");
   if (backgroundMusic == NULL) {
     fprintf(stderr, "Failed to load background music! SDL_mixer Error: %s\n",
@@ -35,7 +35,7 @@ int main() {
   Game *game = malloc(sizeof(struct Game));
   setup(game);
 
-  // Reproduzir música de fundo em loop
+  // Plays the background music in a loop
   if (Mix_PlayMusic(backgroundMusic, -1) == -1) {
     fprintf(stderr, "SDL_mixer Error: %s\n", Mix_GetError());
   }

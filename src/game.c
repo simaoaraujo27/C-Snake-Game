@@ -1,11 +1,13 @@
 #include "game.h"
 
+// Used when the snake reaches the border
 int mod(int x, int y) {
   if (x < 0)
     return x + y;
   return x % y;
 }
 
+// Basic SDL2 input handling
 void processInput(Game *game) {
   SDL_Event e;
   while (SDL_PollEvent(&e) != 0) {
@@ -59,6 +61,7 @@ void increaseSnake(Game *game) {
     break;
   }
 
+  // Updates the tail
   new->next = NULL;
   game->snake->tail->next = new;
   game->snake->tail = new;
@@ -103,7 +106,7 @@ void moveSnake(Game *game, Mix_Chunk *foodSound) {
     }
   }
 
-  // Verifica colisão com o próprio corpo
+  // Checks body colision
   SnakeSegment *body = game->snake->head->next;
   while (body != NULL) {
     if (game->snake->head->y == body->y && game->snake->head->x == body->x) {
@@ -114,8 +117,7 @@ void moveSnake(Game *game, Mix_Chunk *foodSound) {
     body = body->next;
   }
 
-  // Verifica colisão com a maçã e, em caso afirmativo, gera outra e cresce a
-  // cobra
+  // Checks food colision and grows snake
   if (game->snake->head->y == game->food->y &&
       game->snake->head->x == game->food->x) {
     game->score++;
@@ -127,7 +129,7 @@ void moveSnake(Game *game, Mix_Chunk *foodSound) {
       game->food->x = rand() % GRID_WIDTH;
       game->food->y = rand() % GRID_HEIGHT;
     } while (game->grid[game->food->y][game->food->x] !=
-             EMPTY); // Garante que a comida não aparece sobre a cobra
+             EMPTY); // Makes sure that the food doesn't spawn inside the snake
   }
 }
 
@@ -155,11 +157,12 @@ void update(Game *game, Mix_Chunk *foodSound) {
 }
 
 void renderScore(SDL_Renderer *renderer, Game *game, TTF_Font *font) {
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Limpar com cor preta
-  SDL_RenderClear(renderer);                      // Limpar a tela
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_RenderClear(renderer);
 
-  SDL_Color textColor = {255, 255, 255, 255}; // Cor branca
+  SDL_Color textColor = {255, 255, 255, 255};
 
+  // Renders the text to the screen
   char scoreText[50];
   sprintf(scoreText, "Score: %d", game->score);
 
@@ -177,12 +180,12 @@ void renderScore(SDL_Renderer *renderer, Game *game, TTF_Font *font) {
   }
 
   SDL_Rect textRect;
-  textRect.x = 235; // Posição X na tela
-  textRect.y = 650; // Posição Y na tela
+  textRect.x = 235;
+  textRect.y = 650;
   textRect.w = textSurface->w;
   textRect.h = textSurface->h;
 
-  SDL_FreeSurface(textSurface); // Não precisamos mais da surface
+  SDL_FreeSurface(textSurface);
 
   SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
   SDL_DestroyTexture(textTexture);
@@ -201,7 +204,7 @@ void renderGrid(SDL_Renderer *renderer, Game *game) {
       }
       SDL_RenderFillRect(renderer, &rect);
       SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-      SDL_RenderDrawRect(renderer, &rect); // Desenha as bordas das células
+      SDL_RenderDrawRect(renderer, &rect);
     }
   }
   SDL_RenderPresent(renderer);
@@ -212,8 +215,9 @@ void render(SDL_Renderer *renderer, Game *game, TTF_Font *font) {
   renderScore(renderer, game, font);
 }
 
+// Initializes the whole game struct
 void setup(Game *game) {
-  // Inicializa a cobra
+  // Initializes the snake
   Snake *snake = malloc(sizeof(struct Snake));
   if (snake == NULL) {
     fprintf(stderr, "Failed to allocate memory for Snake struct.\n");
@@ -235,7 +239,7 @@ void setup(Game *game) {
   increaseSnake(game);
   increaseSnake(game);
 
-  // Inicializa a comida
+  // Initializes the food
   Food *food = malloc(sizeof(struct Food));
   if (food == NULL) {
     fprintf(stderr, "Failed to allocate memory for Food struct.\n");
@@ -245,7 +249,7 @@ void setup(Game *game) {
   food->y = rand() % GRID_HEIGHT;
   game->food = food;
 
-  // Inicializa o grid
+  // Initializes the grid
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
       game->grid[i][j] = EMPTY;
@@ -255,7 +259,7 @@ void setup(Game *game) {
   game->grid[head->y][head->x] = SNAKE;
   game->grid[food->y][food->x] = FOOD;
 
-  // Inicializa o score, o gameover e o quit
+  // Initializes the score, gameover and quit
   game->score = 0;
   game->gameOver = 0;
   game->quit = 0;
